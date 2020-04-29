@@ -2,6 +2,8 @@ package yuzu.easyhttp.http;
 
 import java.io.OutputStream;
 
+import yuzu.easyhttp.http.cookie.Cookie;
+
 public interface IHttpResponse {
 
 	/** 设置HTTP头内容 */
@@ -16,4 +18,12 @@ public interface IHttpResponse {
 	/** 结束，断开连接 */
 	void close();
 
+	/** 获取所有cookie */
+	Cookie[] getCookie();
+
+	/** 获取cookie */
+	Cookie getCookie(String name);
+
+	/** 设置cookie */
+	void setCookie(Cookie cookie);
 }

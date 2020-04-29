@@ -2,6 +2,8 @@ package yuzu.easyhttp.http;
 
 import java.io.InputStream;
 
+import yuzu.easyhttp.http.cookie.Cookie;
+
 public interface IHttpRequest {
 
 	/** 获取全部Url */
@@ -18,4 +20,14 @@ public interface IHttpRequest {
 
 	/** 获取输入流 */
 	InputStream getInputStream();
+
+	/** 获取所有cookie */
+	Cookie[] getCookie();
+
+	/** 获取cookie */
+	Cookie getCookie(String name);
+
+	/** 获取传递过来的参数 */
+	String getParameter(String key);
+
 }

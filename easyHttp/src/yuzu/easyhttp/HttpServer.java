@@ -30,6 +30,7 @@ public class HttpServer implements Runnable {
 		serverSocket = new ServerSocket(port);
 		thread = new Thread(this);
 		thread.start();
+		thread.setName("HttpServer");
 	}
 
 	@Override

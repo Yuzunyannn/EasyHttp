@@ -17,9 +17,17 @@ public class ContentFile extends Content {
 		this.checkType();
 	}
 
+	public ContentFile(String path) {
+		this(new File(path));
+	}
+
 	public ContentFile(File file, ContentType type) {
 		this.file = file;
 		this.type = type;
+	}
+
+	public ContentFile(String path, ContentType type) {
+		this(new File(path), type);
 	}
 
 	public ContentFile(File file, String charset) {
@@ -28,10 +36,18 @@ public class ContentFile extends Content {
 		this.checkType();
 	}
 
+	public ContentFile(String path, String charset) {
+		this(new File(path), charset);
+	}
+
 	public ContentFile(File file, ContentType type, String charset) {
 		this.file = file;
 		this.type = type;
 		this.charset = charset;
+	}
+
+	public ContentFile(String path, ContentType type, String charset) {
+		this(new File(path), type, charset);
 	}
 
 	@Override

@@ -51,6 +51,7 @@ public class WebSocket implements Runnable {
 	public void run() {
 		try {
 			boolean run = true;
+			this.handle.onConnect(this);
 			while (run) {
 				WebSocketFrame frame = FrameHelper.readFrameWithMerge(in);
 				if (frame == null) break;

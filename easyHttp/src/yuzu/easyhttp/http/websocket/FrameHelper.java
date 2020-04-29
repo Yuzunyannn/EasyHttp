@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import yuzu.easyhttp.http.utilies.StreamHelper;
+
 public class FrameHelper {
 
 	/** websocket的帧信息 */
@@ -22,18 +24,6 @@ public class FrameHelper {
 			System.arraycopy(datas, 0, buffer, 0, datas.length);
 			System.arraycopy(b.datas, 0, buffer, datas.length, b.datas.length);
 		}
-	}
-
-	// 读取几个长度的数据
-	static protected byte[] read(InputStream input, int len) throws IOException {
-		byte[] buffer = new byte[len];
-		len = 0;
-		while (len < buffer.length) {
-			int length = input.read(buffer, len, buffer.length - len);
-			if (length == -1) return null;
-			len += length;
-		}
-		return buffer;
 	}
 
 	/** 读帧，多帧粘结 */
@@ -64,11 +54,11 @@ public class FrameHelper {
 		// 数据长度获取
 		int len = b & 0x7f;
 		if (len == 126) {
-			byte[] buffer = read(input, 2);
+			byte[] buffer = StreamHelper.read(input, 2);
 			if (buffer == null) return null;
 			len = buffer[0] << 8 | buffer[1];
 		} else if (len == 127) {
-			byte[] buffer = read(input, 8);
+			byte[] buffer = StreamHelper.read(input, 8);
 			if (buffer == null) return null;
 			len = 0;
 			for (int i = 0; i < 8; i++) {
@@ -78,11 +68,11 @@ public class FrameHelper {
 		// 掩码获取
 		byte[] masks = null;
 		if (hasMask) {
-			masks = read(input, 4);
+			masks = StreamHelper.read(input, 4);
 			if (masks == null) return null;
 		}
 		// 数据获取
-		frame.datas = read(input, len);
+		frame.datas = StreamHelper.read(input, len);
 		// 掩码计算
 		if (hasMask) {
 			for (int i = 0; i < len; i++) {

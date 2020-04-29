@@ -35,4 +35,16 @@ public class StreamHelper {
 		} catch (IOException e) {}
 	}
 
+	// 读取几个长度的数据
+	static public byte[] read(InputStream input, int len) throws IOException {
+		byte[] buffer = new byte[len];
+		len = 0;
+		while (len < buffer.length) {
+			int length = input.read(buffer, len, buffer.length - len);
+			if (length == -1) return null;
+			len += length;
+		}
+		return buffer;
+	}
+
 }
