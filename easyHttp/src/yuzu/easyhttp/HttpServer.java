@@ -16,7 +16,8 @@ import yuzu.easyhttp.http.HttpResponse;
 import yuzu.easyhttp.http.HttpSocket;
 import yuzu.easyhttp.http.IHttpRequest;
 import yuzu.easyhttp.http.IHttpResponse;
-import yuzu.easyhttp.http.utilies.StreamHelper;
+import yuzu.easyhttp.http.session.Sessions;
+import yuzu.easyhttp.http.util.StreamHelper;
 import yuzu.easyhttp.http.websocket.WebSocket;
 
 public class HttpServer implements Runnable {
@@ -39,13 +40,18 @@ public class HttpServer implements Runnable {
 			while (true) {
 				Socket socket = serverSocket.accept();
 				try {
-					HttpSocket hs = new HttpSocket(socket);
+					HttpSocket hs = new HttpSocket(socket, this);
 					this.handle(hs);
 				} catch (IOException e) {
 					StreamHelper.close(socket);
 				} catch (Exception e) {
 					e.printStackTrace();
 					StreamHelper.close(socket);
+				}
+				try {
+					this.sessions.inspect();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		} catch (Throwable e) {
@@ -103,6 +109,12 @@ public class HttpServer implements Runnable {
 		};
 		// 这里可以开线程，或者进行线程池任务提交等等
 		task.run();
+	}
+
+	final Sessions sessions = new Sessions();
+
+	public Sessions getSessions() {
+		return sessions;
 	}
 
 	private Map<String, IController> map = new LinkedHashMap<>();

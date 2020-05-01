@@ -3,6 +3,7 @@ package yuzu.easyhttp.http;
 import java.io.InputStream;
 
 import yuzu.easyhttp.http.cookie.Cookie;
+import yuzu.easyhttp.http.session.Session;
 
 public interface IHttpRequest {
 
@@ -29,5 +30,8 @@ public interface IHttpRequest {
 
 	/** 获取传递过来的参数 */
 	String getParameter(String key);
+
+	/** 获取会话 */
+	Session getSession();
 
 }

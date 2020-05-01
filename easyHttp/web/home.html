@@ -3,12 +3,18 @@
 <head>
     <script src="/js/home.js"></script>
     <title>测试</title>
+    <style>
+        body{
+            background: url("/img/test.png");
+        }
+    </style>
 </head>
 
 <body>
     <h1>测试哟</h1>
-    <input type="text" id="say" /><br/>
-    <input type="button" value="点我发送ajax请求！Click me to send ajax request!" onclick="ajaxGo()" /><br/>
+    <input type="text" id="say" /><br />
+    <input type="button" value="点我连接到登陆！Click me to logn in!" onclick="loginGo()" /><br />
+    <input type="button" value="点我发送ajax请求！Click me to send ajax request!" onclick="ajaxGo()" /><br />
     <input type="button" id="wsTest" value="点我连接到websocket！Click me to connect websocket!" onclick="websocketGo()" />
 </body>
 

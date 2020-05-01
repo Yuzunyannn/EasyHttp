@@ -1,4 +1,4 @@
-package yuzu.easyhttp.http.utilies;
+package yuzu.easyhttp.http.util;
 
 import java.io.IOException;
 import java.io.InputStream;

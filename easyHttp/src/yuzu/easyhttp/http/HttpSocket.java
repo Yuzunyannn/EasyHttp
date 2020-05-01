@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import yuzu.easyhttp.HttpServer;
+
 public class HttpSocket {
 	final Socket socket;
 	private OutputStream out;
@@ -12,10 +14,12 @@ public class HttpSocket {
 
 	final HttpRequest request;
 	final HttpResponse response;
+	final HttpServer server;
 
-	public HttpSocket(Socket socket) throws IOException {
+	public HttpSocket(Socket socket, HttpServer server) throws IOException {
 		this.socket = socket;
 		this.in = this.socket.getInputStream();
+		this.server = server;
 		this.request = new HttpRequest(this);
 		this.response = new HttpResponse(this);
 	}
@@ -44,5 +48,9 @@ public class HttpSocket {
 		try {
 			this.socket.close();
 		} catch (IOException e) {}
+	}
+	
+	public HttpServer getServer() {
+		return server;
 	}
 }

@@ -8,6 +8,16 @@ function ajaxGo() {
         show.info("[response state code " + ajax.status + "]" + ajax.responseText);
     };
 }
+function loginGo(){
+    show.info("Send get ajax request to login!");
+    var ajax = new XMLHttpRequest();
+    ajax.open('get', 'login');
+    ajax.send();
+    ajax.onreadystatechange = () => {
+        if (ajax.readyState != 4) return;
+        show.info("[response state code " + ajax.status + "]" + ajax.responseText);
+    };
+}
 var ws;
 function websocketGo() {
     if (ws != null) {

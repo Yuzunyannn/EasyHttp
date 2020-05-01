@@ -14,8 +14,8 @@ public class Cookie {
 		for (String str : cookieStrs) {
 			String[] values = str.split("=");
 			Cookie cookie = new Cookie();
-			cookie.name = values[0];
-			cookie.value = values[1];
+			cookie.name = values[0].trim();
+			cookie.value = values[1].trim();
 			cookies.add(cookie);
 		}
 		return cookies;

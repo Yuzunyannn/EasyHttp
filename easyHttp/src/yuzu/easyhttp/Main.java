@@ -1,10 +1,13 @@
 package yuzu.easyhttp;
 
 import yuzu.easyhttp.content.ContentFile;
+import yuzu.easyhttp.content.ContentText;
+import yuzu.easyhttp.content.ContentType;
 import yuzu.easyhttp.controller.ControllerResources;
 import yuzu.easyhttp.controller.ControllerWebsocket;
 import yuzu.easyhttp.http.IHttpRequest;
 import yuzu.easyhttp.http.cookie.Cookie;
+import yuzu.easyhttp.http.session.Session;
 import yuzu.easyhttp.http.websocket.WebSocket;
 
 public class Main {
@@ -22,7 +25,16 @@ public class Main {
 		// post测试
 		server.register("/info", (request, response) -> {
 			String say = request.getParameter("say");
-			return funny(say);
+			response.setCookie(new Cookie("say", say));
+			Session s = request.getSession();
+			if ("whatever".equals(s.getAttribute("usernmae"))) return funny(say);
+			else return "请点击测试登陆按钮，登陆后可以看到其他内容！";
+		});
+		// session测试
+		server.register("/login", (request, response) -> {
+			Session s = request.getSession();
+			s.setAttribute("usernmae", "whatever");
+			return new ContentText("{\"code\":1}", ContentType.JSON);
 		});
 		// webscoket测试
 		server.register("/infows", new ControllerWebsocket() {

@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.TimeZone;
 
 import yuzu.easyhttp.http.cookie.Cookie;
-import yuzu.easyhttp.http.utilies.StreamHelper;
+import yuzu.easyhttp.http.util.StreamHelper;
 
 public class HttpResponse extends HttpHead implements IHttpResponse {
 

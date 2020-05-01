@@ -9,9 +9,13 @@ import java.util.TreeMap;
 
 import yuzu.easyhttp.HttpServer;
 import yuzu.easyhttp.http.cookie.Cookie;
-import yuzu.easyhttp.http.utilies.StreamHelper;
+import yuzu.easyhttp.http.session.Session;
+import yuzu.easyhttp.http.session.Sessions;
+import yuzu.easyhttp.http.util.StreamHelper;
 
 public class HttpRequest extends HttpHead implements IHttpRequest {
+
+	public static final String SESSION_NAME = "session";
 
 	private final HttpSocket hs;
 	/** 请求类型 */
@@ -20,6 +24,8 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 	private final String URL;
 	/** 相对地址 */
 	private String rURL;
+	/** 会话 */
+	private Session session;
 	/** 参数 */
 	private Map<String, String> parameters = new TreeMap<>();
 
@@ -54,6 +60,11 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 		if ("post".equals(type)) {
 			byte[] bytes = getContent(in);
 			if (bytes != null) dealParameters(new String(bytes, this.getContentCharset()));
+		}
+		// 获取session
+		Cookie sessionCookie = this.getCookie(SESSION_NAME);
+		if (sessionCookie != null) {
+			this.session = hs.getServer().getSessions().getSession(sessionCookie.getValue());
 		}
 	}
 
@@ -131,6 +142,15 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 	@Override
 	public String getParameter(String key) {
 		return parameters.get(key);
+	}
+
+	@Override
+	public Session getSession() {
+		if (session != null) return session;
+		Sessions sessions = hs.getServer().getSessions();
+		session = sessions.craeteSession(sessions.genId());
+		hs.response.setCookie(new Cookie(SESSION_NAME, session.getId()));
+		return this.session;
 	}
 
 }
