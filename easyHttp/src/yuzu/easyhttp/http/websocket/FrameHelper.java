@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-import yuzu.easyhttp.http.util.StreamHelper;
+import yuzu.easyhttp.util.StreamHelper;
 
 public class FrameHelper {
 

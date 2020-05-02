@@ -3,8 +3,8 @@ package yuzu.easyhttp.http.session;
 import java.util.HashMap;
 import java.util.Map;
 
-import yuzu.easyhttp.http.util.ArrayHeap;
-import yuzu.easyhttp.http.util.Heap;
+import yuzu.easyhttp.util.ArrayHeap;
+import yuzu.easyhttp.util.Heap;
 
 public class Sessions {
 

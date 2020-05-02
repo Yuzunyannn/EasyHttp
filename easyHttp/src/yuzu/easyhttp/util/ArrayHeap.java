@@ -1,4 +1,4 @@
-package yuzu.easyhttp.http.util;
+package yuzu.easyhttp.util;
 
 import java.util.ArrayList;
 import java.util.Comparator;

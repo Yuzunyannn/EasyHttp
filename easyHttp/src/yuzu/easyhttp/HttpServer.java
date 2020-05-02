@@ -17,8 +17,8 @@ import yuzu.easyhttp.http.HttpSocket;
 import yuzu.easyhttp.http.IHttpRequest;
 import yuzu.easyhttp.http.IHttpResponse;
 import yuzu.easyhttp.http.session.Sessions;
-import yuzu.easyhttp.http.util.StreamHelper;
 import yuzu.easyhttp.http.websocket.WebSocket;
+import yuzu.easyhttp.util.StreamHelper;
 
 public class HttpServer implements Runnable {
 

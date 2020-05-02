@@ -1,8 +1,9 @@
-package yuzu.easyhttp.http.util;
+package yuzu.easyhttp.util;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.net.Socket;
 
 public class StreamHelper {
@@ -12,6 +13,13 @@ public class StreamHelper {
 		int len;
 		while ((len = is.read(bytes)) != -1)
 			os.write(bytes, 0, len);
+	}
+
+	public static void close(Reader stream) {
+		try {
+			if (stream == null) return;
+			stream.close();
+		} catch (IOException e) {}
 	}
 
 	public static void close(OutputStream stream) {

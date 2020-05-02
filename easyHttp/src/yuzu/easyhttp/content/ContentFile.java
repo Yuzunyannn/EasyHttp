@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import yuzu.easyhttp.http.IHttpResponse;
-import yuzu.easyhttp.http.util.StreamHelper;
+import yuzu.easyhttp.util.StreamHelper;
 
 public class ContentFile extends Content {
 

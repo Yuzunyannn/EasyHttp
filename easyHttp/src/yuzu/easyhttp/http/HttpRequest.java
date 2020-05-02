@@ -11,7 +11,7 @@ import yuzu.easyhttp.HttpServer;
 import yuzu.easyhttp.http.cookie.Cookie;
 import yuzu.easyhttp.http.session.Session;
 import yuzu.easyhttp.http.session.Sessions;
-import yuzu.easyhttp.http.util.StreamHelper;
+import yuzu.easyhttp.util.StreamHelper;
 
 public class HttpRequest extends HttpHead implements IHttpRequest {
 
