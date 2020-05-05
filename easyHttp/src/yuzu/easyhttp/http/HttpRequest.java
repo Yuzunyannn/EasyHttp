@@ -93,7 +93,7 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 
 	// 读一行
 	private String readLine(InputStream in) throws IOException {
-		ByteBuffer buffer = ByteBuffer.allocate(256);
+		ByteBuffer buffer = ByteBuffer.allocate(1024);
 		int i;
 		while (true) {
 			i = in.read();

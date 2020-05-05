@@ -1,8 +1,11 @@
 package yuzu.easyhttp.js;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Queue;
@@ -28,14 +31,14 @@ public class JSDrive implements Runnable {
 	String path;
 	Thread thread;
 
-	public JSDrive(HttpServer server, String mainJSPath) throws IOException, ScriptException, NoSuchMethodException {
+	public JSDrive(HttpServer server, String mainJSPath) throws Exception {
 		this.server = server;
 		File file = new File(mainJSPath);
 		path = file.getParent() + "/";
 		this.init();
 		Reader reader = null;
 		try {
-			reader = new FileReader(file);
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
 			engine.eval(reader);
 			reader.close();
 			try {

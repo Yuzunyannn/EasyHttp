@@ -45,10 +45,10 @@ public class JSController implements IController, IWebSocketHandle {
 	}
 
 	@Override
-	public void onConnect(WebSocket ws) {
+	public void onConnect(WebSocket ws, IHttpRequest request) {
 		driver.task(() -> {
 			try {
-				script.invokeMethod(obj, "onConnect", ws);
+				script.invokeMethod(obj, "onConnect", ws, request);
 			} catch (Exception e) {}
 		});
 	}

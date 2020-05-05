@@ -3,8 +3,8 @@ package yuzu.easyhttp;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import yuzu.easyhttp.content.Content;
 import yuzu.easyhttp.content.ContentType;
@@ -39,15 +39,7 @@ public class HttpServer implements Runnable {
 		try {
 			while (true) {
 				Socket socket = serverSocket.accept();
-				try {
-					HttpSocket hs = new HttpSocket(socket, this);
-					this.handle(hs);
-				} catch (IOException e) {
-					StreamHelper.close(socket);
-				} catch (Exception e) {
-					e.printStackTrace();
-					StreamHelper.close(socket);
-				}
+				this.handle(socket);
 				try {
 					this.sessions.inspect();
 				} catch (Exception e) {
@@ -59,56 +51,64 @@ public class HttpServer implements Runnable {
 		}
 	}
 
-	public void handle(HttpSocket hs) {
-		HttpRequest request = hs.getHttpRequest();
-		HttpResponse response = hs.getHttpResponse();
-		String url = request.getURL();
-		if (url.lastIndexOf('/') == url.length() - 1) url = url.substring(0, url.length() - 1);
-		for (Map.Entry<String, IController> entry : map.entrySet()) {
-			if (url.matches(entry.getKey())) {
-				request.setRelativeURL(entry.getKey());
-				task(request, response, entry.getValue());
-				return;
-			}
-		}
-		task(request, response, Code404.instance);
-	}
-
-	private void task(IHttpRequest request, IHttpResponse response, IController controller) {
+	public void handle(Socket socket) {
 		Runnable task = () -> {
 			try {
-				// 长连接
-				if ("websocket".equals(request.getHeaders("Upgrade"))) {
-					Object ret = controller.handle(request, response);
-					if (ret instanceof WebSocket) return;
-					response.beginSend(403);
-					response.close();
-					return;
+				HttpSocket hs = new HttpSocket(socket, this);
+				HttpRequest request = hs.getHttpRequest();
+				HttpResponse response = hs.getHttpResponse();
+				String url = request.getURL();
+				if (url.lastIndexOf('/') == url.length() - 1) url = url.substring(0, url.length() - 1);
+				for (Map.Entry<String, IController> entry : map.entrySet()) {
+					if (url.matches(entry.getKey())) {
+						request.setRelativeURL(entry.getKey());
+						task(request, response, entry.getValue());
+						return;
+					}
 				}
-				// 短连接
-				Object ret = controller.handle(request, response);
-				if (response.over()) {
-					response.close();
-					return;
-				}
-				Content content = Content.cast(ret);
-				if (content == null) {
-					response.beginSend(200);
-					response.close();
-					return;
-				}
-				ContentType type = content.getType();
-				if (type.text) response.setHeaders("Content-Type", type.name + ";charset=" + content.getCharset());
-				else response.setHeaders("Content-Type", type.name);
-				content.write(response);
-				response.close();
+				task(request, response, Code404.instance);
+			} catch (IOException e) {
+				StreamHelper.close(socket);
 			} catch (Exception e) {
-				new Code500(e).handle(request, response);
-				response.close();
+				e.printStackTrace();
+				StreamHelper.close(socket);
 			}
 		};
 		// 这里可以开线程，或者进行线程池任务提交等等
-		task.run();
+		new Thread(task).start();
+	}
+
+	private void task(IHttpRequest request, IHttpResponse response, IController controller) {
+		try {
+			// 长连接
+			if ("websocket".equals(request.getHeaders("Upgrade"))) {
+				Object ret = controller.handle(request, response);
+				if (ret instanceof WebSocket) return;
+				response.beginSend(403);
+				response.close();
+				return;
+			}
+			// 短连接
+			Object ret = controller.handle(request, response);
+			if (response.over()) {
+				response.close();
+				return;
+			}
+			Content content = Content.cast(ret);
+			if (content == null) {
+				response.beginSend(200);
+				response.close();
+				return;
+			}
+			ContentType type = content.getType();
+			if (type.text) response.setHeaders("Content-Type", type.name + ";charset=" + content.getCharset());
+			else response.setHeaders("Content-Type", type.name);
+			content.write(response);
+			response.close();
+		} catch (Exception e) {
+			new Code500(e).handle(request, response);
+			response.close();
+		}
 	}
 
 	final Sessions sessions = new Sessions();
@@ -117,7 +117,7 @@ public class HttpServer implements Runnable {
 		return sessions;
 	}
 
-	private Map<String, IController> map = new LinkedHashMap<>();
+	private Map<String, IController> map = new ConcurrentHashMap<>();
 
 	/**
 	 * 注册一个控制器

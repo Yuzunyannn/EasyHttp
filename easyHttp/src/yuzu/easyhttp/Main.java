@@ -17,7 +17,6 @@ public class Main {
 		HttpServer server = new HttpServer(25453);
 		// test1(server);
 		new JSDrive(server, "./web/server.js");
-
 	}
 
 	static public void test1(HttpServer server) throws Exception {
@@ -47,7 +46,7 @@ public class Main {
 		server.register("/infows", new ControllerWebsocket() {
 
 			@Override
-			public void onConnect(WebSocket ws) {
+			public void onConnect(WebSocket ws, IHttpRequest request) {
 
 			}
 

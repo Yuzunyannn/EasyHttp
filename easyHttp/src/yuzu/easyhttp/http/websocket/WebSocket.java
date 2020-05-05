@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import yuzu.easyhttp.http.IHttpRequest;
 import yuzu.easyhttp.http.IHttpResponse;
@@ -17,6 +19,8 @@ public class WebSocket implements Runnable {
 	IHttpResponse response;
 	IHttpRequest request;
 	IWebSocketHandle handle;
+
+	Map<String, Object> map = new HashMap<>();
 
 	public WebSocket(IHttpRequest request, IHttpResponse response, IWebSocketHandle handle) throws Exception {
 		out = this.webSocketResponse(request, response);
@@ -38,6 +42,10 @@ public class WebSocket implements Runnable {
 		return response.beginSend(101);
 	}
 
+	public void close() {
+		response.close();
+	}
+
 	public boolean send(String str) {
 		try {
 			FrameHelper.writeFarme(out, str);
@@ -51,7 +59,7 @@ public class WebSocket implements Runnable {
 	public void run() {
 		try {
 			boolean run = true;
-			this.handle.onConnect(this);
+			this.handle.onConnect(this, request);
 			while (run) {
 				WebSocketFrame frame = FrameHelper.readFrameWithMerge(in);
 				if (frame == null) break;
@@ -79,9 +87,18 @@ public class WebSocket implements Runnable {
 				}
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
+			if (!"Socket closed".equals(e.getMessage())) e.printStackTrace();
 		}
 		this.response.close();
 		this.handle.onClose(this);
 	}
+
+	public Object getParameter(String key) {
+		return map.get(key);
+	}
+
+	public void setParameter(String key, Object value) {
+		map.put(key, value);
+	}
+
 }

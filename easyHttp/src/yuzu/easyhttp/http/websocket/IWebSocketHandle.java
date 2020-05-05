@@ -1,9 +1,11 @@
 package yuzu.easyhttp.http.websocket;
 
+import yuzu.easyhttp.http.IHttpRequest;
+
 public interface IWebSocketHandle {
 
 	/** WS连接时候调用 */
-	void onConnect(WebSocket ws);
+	void onConnect(WebSocket ws, IHttpRequest request);
 
 	/**
 	 * 接受数据

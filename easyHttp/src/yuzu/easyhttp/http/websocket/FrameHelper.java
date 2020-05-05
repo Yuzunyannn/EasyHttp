@@ -56,7 +56,7 @@ public class FrameHelper {
 		if (len == 126) {
 			byte[] buffer = StreamHelper.read(input, 2);
 			if (buffer == null) return null;
-			len = buffer[0] << 8 | buffer[1];
+			len = buffer[0] << 8 | (0xff & buffer[1]);
 		} else if (len == 127) {
 			byte[] buffer = StreamHelper.read(input, 8);
 			if (buffer == null) return null;
