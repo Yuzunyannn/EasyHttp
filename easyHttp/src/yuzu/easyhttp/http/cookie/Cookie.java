@@ -23,6 +23,7 @@ public class Cookie {
 
 	private String name;
 	private String value;
+	private String path;
 
 	public Cookie() {
 
@@ -45,10 +46,19 @@ public class Cookie {
 		return value;
 	}
 
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append(name).append("=").append(value).append(";").append(HttpHead.SPACE);
+		if (path != null) s.append("Path").append("=").append(path).append(";").append(HttpHead.SPACE);
 		return s.toString();
 	}
 

@@ -59,6 +59,15 @@ public class HttpServer implements Runnable {
 				HttpResponse response = hs.getHttpResponse();
 				String url = request.getURL();
 				if (url.lastIndexOf('/') == url.length() - 1) url = url.substring(0, url.length() - 1);
+				if (url.isEmpty()) {
+					IController ctrl = map.get("");
+					if (ctrl == null) task(request, response, Code404.instance);
+					else {
+						request.setRelativeURL("/");
+						task(request, response, ctrl);
+					}
+					return;
+				}
 				for (Map.Entry<String, IController> entry : map.entrySet()) {
 					if (url.matches(entry.getKey())) {
 						request.setRelativeURL(entry.getKey());

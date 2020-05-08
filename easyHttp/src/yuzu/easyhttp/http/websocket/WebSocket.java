@@ -46,6 +46,10 @@ public class WebSocket implements Runnable {
 		response.close();
 	}
 
+	public boolean isOpen() {
+		return request.getSocket().isOpen();
+	}
+
 	public boolean send(String str) {
 		try {
 			FrameHelper.writeFarme(out, str);
@@ -93,12 +97,16 @@ public class WebSocket implements Runnable {
 		this.handle.onClose(this);
 	}
 
-	public Object getParameter(String key) {
+	public Object getAttribute(String key) {
 		return map.get(key);
 	}
 
-	public void setParameter(String key, Object value) {
+	public void setAttribute(String key, Object value) {
 		map.put(key, value);
+	}
+
+	public Map<String, Object> getAttributes() {
+		return map;
 	}
 
 }

@@ -9,14 +9,14 @@ import yuzu.easyhttp.http.IHttpRequest;
 import yuzu.easyhttp.http.cookie.Cookie;
 import yuzu.easyhttp.http.session.Session;
 import yuzu.easyhttp.http.websocket.WebSocket;
-import yuzu.easyhttp.js.JSDrive;
 
 public class Main {
 
 	public static void main(String[] arg) throws Exception {
 		HttpServer server = new HttpServer(25453);
-		// test1(server);
-		new JSDrive(server, "./web/server.js");
+		// server.register("/file/*", new ControllerResources("./"));
+		test1(server);
+		// new JSDrive(server, "./web/server.js");
 	}
 
 	static public void test1(HttpServer server) throws Exception {

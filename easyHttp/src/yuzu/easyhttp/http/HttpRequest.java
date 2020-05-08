@@ -3,6 +3,7 @@ package yuzu.easyhttp.http;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -59,7 +60,11 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 		// 获取POST参数
 		if ("post".equals(type)) {
 			byte[] bytes = getContent(in);
-			if (bytes != null) dealParameters(new String(bytes, this.getContentCharset()));
+			if (bytes != null) {
+				String value = new String(bytes, this.getContentCharset());
+				value = java.net.URLDecoder.decode(value, "utf-8");
+				dealParameters(value);
+			}
 		}
 		// 获取session
 		Cookie sessionCookie = this.getCookie(SESSION_NAME);
@@ -69,12 +74,40 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 	}
 
 	private void dealParameters(String str) {
-		String[] parStrs = str.split("&");
+		String[] parStrs = this.split$(str);
 		for (String parStr : parStrs) {
-			String[] pair = parStr.split("=");
-			if (pair.length < 2) continue;
-			parameters.put(pair[0], pair[1]);
+			int i = parStr.indexOf('=');
+			if (i == -1) continue;
+			parameters.put(parStr.substring(0, i), parStr.substring(i + 1));
 		}
+	}
+
+	private String[] split$(String str) {
+		List<String> list = new LinkedList<String>();
+		while (!str.isEmpty()) {
+			int i = this.find$(str);
+			if (i == -1) break;
+			list.add(str.substring(0, i));
+			str = str.substring(i + 1);
+		}
+		if (!str.isEmpty()) list.add(str);
+		String[] result = new String[list.size()];
+		return list.toArray(result);
+	}
+
+	private int find$(String str) {
+		boolean inString = false;
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (ch == '"') {
+				if (inString) {
+					if (str.charAt(i - 1) != '\\') inString = false;
+				} else inString = true;
+			}
+			if (inString) continue;
+			if (ch == '&') return i;
+		}
+		return -1;
 	}
 
 	// 获取http内容
@@ -149,8 +182,15 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 		if (session != null) return session;
 		Sessions sessions = hs.getServer().getSessions();
 		session = sessions.craeteSession(sessions.genId());
-		hs.response.setCookie(new Cookie(SESSION_NAME, session.getId()));
+		Cookie cookie = new Cookie(SESSION_NAME, session.getId());
+		cookie.setPath("/");
+		hs.response.setCookie(cookie);
 		return this.session;
+	}
+
+	@Override
+	public HttpSocket getSocket() {
+		return hs;
 	}
 
 }

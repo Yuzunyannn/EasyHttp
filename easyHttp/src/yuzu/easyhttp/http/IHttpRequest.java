@@ -34,4 +34,7 @@ public interface IHttpRequest {
 	/** 获取会话 */
 	Session getSession();
 
+	/** 获取socket */
+	HttpSocket getSocket();
+
 }

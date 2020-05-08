@@ -100,6 +100,7 @@ public class ContentFile extends Content {
 			this.type = ContentType.GIF;
 			break;
 		default:
+			this.type = ContentType.OCTET;
 			break;
 		}
 	}

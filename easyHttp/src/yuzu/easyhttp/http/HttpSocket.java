@@ -49,7 +49,11 @@ public class HttpSocket {
 			this.socket.close();
 		} catch (IOException e) {}
 	}
-	
+
+	public boolean isOpen() {
+		return socket.isConnected();
+	}
+
 	public HttpServer getServer() {
 		return server;
 	}
