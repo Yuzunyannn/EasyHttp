@@ -68,8 +68,9 @@ public class HttpServer implements Runnable {
 					}
 					return;
 				}
+				String testUrl = url + "/";
 				for (Map.Entry<String, IController> entry : map.entrySet()) {
-					if (url.matches(entry.getKey())) {
+					if (url.matches(entry.getKey()) || testUrl.matches(entry.getKey())) {
 						request.setRelativeURL(entry.getKey());
 						task(request, response, entry.getValue());
 						return;

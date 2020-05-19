@@ -50,8 +50,8 @@ public class HttpSocket {
 		} catch (IOException e) {}
 	}
 
-	public boolean isOpen() {
-		return socket.isConnected();
+	public boolean isClosed() {
+		return socket.isClosed();
 	}
 
 	public HttpServer getServer() {

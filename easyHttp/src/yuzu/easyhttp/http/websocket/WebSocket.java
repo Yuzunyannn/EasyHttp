@@ -46,8 +46,8 @@ public class WebSocket implements Runnable {
 		response.close();
 	}
 
-	public boolean isOpen() {
-		return request.getSocket().isOpen();
+	public boolean isClosed() {
+		return request.getSocket().isClosed();
 	}
 
 	public boolean send(String str) {
@@ -91,7 +91,7 @@ public class WebSocket implements Runnable {
 				}
 			}
 		} catch (Throwable e) {
-			if (!"Socket closed".equals(e.getMessage())) e.printStackTrace();
+			if (!"socket closed".equals(e.getMessage())) e.printStackTrace();
 		}
 		this.response.close();
 		this.handle.onClose(this);

@@ -54,7 +54,7 @@ public class ContentFile extends Content {
 	public void write(IHttpResponse response) throws IOException {
 		long len = file.length();
 		response.setHeaders("Content-Length", Long.toString(len));
-		OutputStream out = response.beginSend(200);
+		OutputStream out = response.beginSend(code());
 		FileInputStream in = null;
 		try {
 			in = new FileInputStream(file);

@@ -14,7 +14,7 @@ public class Main {
 
 	public static void main(String[] arg) throws Exception {
 		HttpServer server = new HttpServer(25453);
-		// server.register("/file/*", new ControllerResources("./"));
+		server.register("/file/*", new ControllerResources.Folder("./"));
 		test1(server);
 		// new JSDrive(server, "./web/server.js");
 	}

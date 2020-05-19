@@ -83,6 +83,7 @@ public class Sessions {
 	}
 
 	private void inspectTop(long time) {
+		if (heap.isEmpty()) return;
 		SessionTime st = heap.top();
 		// 栈顶永远是最小的，如果栈顶到期
 		if (st.expire <= time) {

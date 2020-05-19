@@ -12,12 +12,12 @@ public abstract class Code implements IController {
 	public Object handle(IHttpRequest request, IHttpResponse response) {
 		OutputStream out = response.beginSend(this.code());
 		try {
-			this.handle(out);
+			this.handle(out, request, response);
 		} catch (IOException e) {}
 		return null;
 	}
 
-	protected abstract void handle(OutputStream out) throws IOException;
+	protected abstract void handle(OutputStream out, IHttpRequest request, IHttpResponse response) throws IOException;
 
 	protected abstract int code();
 }

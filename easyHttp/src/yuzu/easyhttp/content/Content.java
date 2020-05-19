@@ -27,6 +27,10 @@ public abstract class Content {
 		this.type = type;
 	}
 
+	public int code() {
+		return 200;
+	}
+
 	abstract public void write(IHttpResponse response) throws IOException;
 
 	public static Content cast(Object obj) {

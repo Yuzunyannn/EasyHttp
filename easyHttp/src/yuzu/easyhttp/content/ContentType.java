@@ -3,11 +3,11 @@ package yuzu.easyhttp.content;
 public enum ContentType {
 	TEXT("text/plain", true),
 	HTML("text/html", true),
+	CSS("text/css", true),
 	JPEG("image/jpeg", false),
 	GIF("image/gif", false),
 	PNG("image/png", false),
 	JAVASCRIPT("application/javascript", true),
-	CSS("application/css", true),
 	JSON("application/json", true),
 	XML("application/xml", true),
 	PDF("application/pdf", false),
@@ -19,6 +19,11 @@ public enum ContentType {
 	ContentType(String name, boolean text) {
 		this.name = name;
 		this.text = text;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }

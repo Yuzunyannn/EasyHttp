@@ -33,8 +33,10 @@ public class ContentText extends Content {
 
 	@Override
 	public void write(IHttpResponse response) throws IOException {
-		OutputStream out = response.beginSend(200);
-		out.write(text.getBytes(this.getCharset()));
+		byte[] bytes = text.getBytes(this.getCharset());
+		response.setHeaders("Content-Length", Integer.toString(bytes.length));
+		OutputStream out = response.beginSend(code());
+		out.write(bytes);
 	}
 
 	private void checkType() {
