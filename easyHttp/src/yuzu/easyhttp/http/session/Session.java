@@ -30,6 +30,10 @@ public class Session {
 		map.put(key, value);
 	}
 
+	public void removeAttribute(String key) {
+		map.remove(key);
+	}
+
 	public Object getAttribute(String key) {
 		return map.get(key);
 	}

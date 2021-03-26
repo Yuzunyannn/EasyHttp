@@ -12,7 +12,7 @@ public class Code403 extends Code {
 
 	@Override
 	protected void handle(OutputStream out, IHttpRequest request, IHttpResponse response) throws IOException {
-		
+		out.write("403".getBytes());
 	}
 
 	@Override

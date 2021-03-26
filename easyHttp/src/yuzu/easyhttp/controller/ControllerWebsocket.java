@@ -12,7 +12,7 @@ public abstract class ControllerWebsocket implements IController, IWebSocketHand
 		if (!"websocket".equals(request.getHeaders("Upgrade"))) return Code403.instance.handle(request, response);
 		try {
 			boolean accpet = this.accpet(request);
-			if (accpet == false) return Code403.instance.handle(request, response);;
+			if (accpet == false) return Code403.instance.handle(request, response);
 			WebSocket ws = new WebSocket(request, response, this);
 			return ws;
 		} catch (Exception e) {

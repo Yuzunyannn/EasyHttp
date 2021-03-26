@@ -15,7 +15,7 @@ public class Cookie {
 			String[] values = str.split("=");
 			Cookie cookie = new Cookie();
 			cookie.name = values[0].trim();
-			cookie.value = values[1].trim();
+			cookie.value = values.length > 1 ? values[1].trim() : "";
 			cookies.add(cookie);
 		}
 		return cookies;

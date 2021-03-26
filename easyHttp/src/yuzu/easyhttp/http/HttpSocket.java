@@ -28,6 +28,10 @@ public class HttpSocket {
 		this.out = this.socket.getOutputStream();
 	}
 
+	public Socket getSocket() {
+		return socket;
+	}
+
 	public HttpRequest getHttpRequest() {
 		return this.request;
 	}

@@ -9,12 +9,12 @@ import yuzu.easyhttp.util.Heap;
 public class Sessions {
 
 	/** 生命持续时间，分钟 */
-	public static final int LIFE = 30;
+	public int life = 30;
 
 	private Map<String, Session> map = new HashMap<>();
 	private Heap<SessionTime> heap = new ArrayHeap<>();
 
-	private class SessionTime implements Comparable<SessionTime> {
+	class SessionTime implements Comparable<SessionTime> {
 		final long expire;
 		final Session session;
 
@@ -38,6 +38,14 @@ public class Sessions {
 		}
 	}
 
+	public int getLife() {
+		return life;
+	}
+
+	public void setLife(int life) {
+		this.life = Math.max(life, 1);
+	}
+	
 	/** 获取会话 */
 	public Session getSession(String id) {
 		if (id == null || id.isEmpty()) return null;
@@ -53,7 +61,7 @@ public class Sessions {
 			Session session = map.get(id);
 			if (session != null) return session;
 			session = new Session(id);
-			long expire = System.currentTimeMillis() + LIFE * 60 * 1000;
+			long expire = System.currentTimeMillis() + getLife() * 60 * 1000;
 			session.setExpire(expire);
 			SessionTime st = new SessionTime(session.getExpire(), session);
 			heap.push(st);
@@ -78,12 +86,12 @@ public class Sessions {
 		if (heap.isEmpty()) return;
 		long time = System.currentTimeMillis();
 		for (int i = 0; i < 10; i++) synchronized (this) {
-			this.inspectTop(time);
+			if (this.inspectTop(time)) break;
 		}
 	}
 
-	private void inspectTop(long time) {
-		if (heap.isEmpty()) return;
+	private boolean inspectTop(long time) {
+		if (heap.isEmpty()) return true;
 		SessionTime st = heap.top();
 		// 栈顶永远是最小的，如果栈顶到期
 		if (st.expire <= time) {
@@ -97,7 +105,8 @@ public class Sessions {
 				heap.pop();
 				heap.push(new SessionTime(session.getExpire(), session));
 			}
-		}
+			return false;
+		} else return true;
 	}
 
 	/** 生成一个id */

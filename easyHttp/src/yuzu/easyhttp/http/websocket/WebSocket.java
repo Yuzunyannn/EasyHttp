@@ -52,7 +52,20 @@ public class WebSocket implements Runnable {
 
 	public boolean send(String str) {
 		try {
-			FrameHelper.writeFarme(out, str);
+			FrameHelper.writeFrame(out, str);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public boolean sendPingPong(boolean isPing) {
+		try {
+			WebSocketFrame frame = new WebSocketFrame();
+			frame.datas = new byte[0];
+			frame.opcode = isPing ? 9 : 10;
+			frame.fin = true;
+			FrameHelper.writeFrame(out, frame);
 			return true;
 		} catch (IOException e) {
 			return false;
@@ -79,19 +92,19 @@ public class WebSocket implements Runnable {
 				case 8:
 					run = false;
 					break;
-				case 9:
-					System.out.println("不支持ping操作");
+				case 9:// ping
+					this.sendPingPong(false);
 					break;
-				case 10:
-					System.out.println("不支持pong操作");
+				case 10:// pong
+					this.sendPingPong(true);
 					break;
 				default:
-					System.out.println("不支持的操作:" + frame.opcode);
+					System.out.println("收到未知操作:" + frame.opcode);
 					break;
 				}
 			}
 		} catch (Throwable e) {
-			if (!"socket closed".equals(e.getMessage())) e.printStackTrace();
+			if (!"Socket closed".equals(e.getMessage()) && !"recv failed".equals(e.getMessage())) e.printStackTrace();
 		}
 		this.response.close();
 		this.handle.onClose(this);

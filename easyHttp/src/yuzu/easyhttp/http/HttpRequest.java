@@ -2,6 +2,7 @@ package yuzu.easyhttp.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
@@ -179,7 +180,11 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 
 	@Override
 	public Session getSession() {
-		if (session != null) return session;
+		if (session != null) {
+			Sessions sessions = hs.getServer().getSessions();
+			session.setExpire(System.currentTimeMillis() + sessions.getLife() * 60 * 1000);
+			return session;
+		}
 		Sessions sessions = hs.getServer().getSessions();
 		session = sessions.craeteSession(sessions.genId());
 		Cookie cookie = new Cookie(SESSION_NAME, session.getId());
@@ -191,6 +196,11 @@ public class HttpRequest extends HttpHead implements IHttpRequest {
 	@Override
 	public HttpSocket getSocket() {
 		return hs;
+	}
+
+	@Override
+	public InetAddress getAddress() {
+		return hs.getSocket().getInetAddress();
 	}
 
 }

@@ -104,7 +104,7 @@ public class FrameHelper {
 	}
 
 	/** 写一个字符串 */
-	static public void writeFarme(OutputStream output, String str) throws IOException {
+	static public void writeFrame(OutputStream output, String str) throws IOException {
 		WebSocketFrame frame = new WebSocketFrame();
 		try {
 			frame.datas = str.getBytes("utf-8");

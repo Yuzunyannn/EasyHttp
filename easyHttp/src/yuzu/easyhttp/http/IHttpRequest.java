@@ -1,6 +1,7 @@
 package yuzu.easyhttp.http;
 
 import java.io.InputStream;
+import java.net.InetAddress;
 
 import yuzu.easyhttp.http.cookie.Cookie;
 import yuzu.easyhttp.http.session.Session;
@@ -36,5 +37,8 @@ public interface IHttpRequest {
 
 	/** 获取socket */
 	HttpSocket getSocket();
+
+	/** 获取连接地址 */
+	InetAddress getAddress();
 
 }
